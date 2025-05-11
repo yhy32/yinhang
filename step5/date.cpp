@@ -1,34 +1,40 @@
 #include <iostream>
 #include <cstdlib>
 #include "date.h"
+#include <stdexcept>
+#include <sstream>
 using namespace std;
 
-namespace {  //namespaceÊ¹ÏÂÃæµÄ¶¨ÒåÖ»ÔÚµ±Ç°ÎÄ¼şÖĞÉúĞ§
+namespace {  //namespaceÊ¹ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½Ö»ï¿½Úµï¿½Ç°ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Ğ§
 
 	const int DAYS_BEFORE_MONTH[] = { 0,31,59,90,120,151,181,212,243,273,304,334,365 };
 	//31,28,31, 30, 31, 30, 31, 31, 30, 31, 30, 31
-	//3ÔÂÓĞ¶àÉÙÌì=month[3]-month[2]=90-59=3Ìì£»
-}                                     //getMaxDay()ÒÔ´ËÎª»ù´¡¼ÆËãµ±Ç°ÔÂ×î´óÌìÊı
+	//3ï¿½ï¿½ï¿½Ğ¶ï¿½ï¿½ï¿½ï¿½ï¿½=month[3]-month[2]=90-59=3ï¿½ì£»
+}                                     //getMaxDay()ï¿½Ô´ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ãµ±Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 
 Date::Date(int year, int month, int day) :year(year), month(month), day(day)
 {
+
 	if (day <= 0 || day > getMaxDay())
 	{
-	 cout << "Invalid date: "; show(); cout << endl; exit(1);
+        std::ostringstream oss;
+        oss << "Invalid date: " << year << "-" << month << "-" << day;
+        throw std::runtime_error(oss.str());
+    
 	}
-	int years = year - 1;   //»ù×¼ÈÕÆÚÎª¹«ÔªÔªÄê1ÔÂ1ÈÕ£¬¼´1Äê1ÔÂ1ÈÕ
+	int years = year - 1;   //ï¿½ï¿½×¼ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ÔªÔªï¿½ï¿½1ï¿½ï¿½1ï¿½Õ£ï¿½ï¿½ï¿½1ï¿½ï¿½1ï¿½ï¿½1ï¿½ï¿½
 	totalDays = years * 365 + years / 4 - years / 100 + years / 400 + DAYS_BEFORE_MONTH[month - 1] + day;
-	//DAYS_BEFORE_MONTH[month - 1]»ñµÃµ±Ç°monthÔÂ1ÈÕÓë±¾Äê1ÔÂ1ÈÕÏà²îÌìÊı£¬ÔÚÊı×éÖĞ²éÑ¯µÃÖª
+	//DAYS_BEFORE_MONTH[month - 1]ï¿½ï¿½Ãµï¿½Ç°monthï¿½ï¿½1ï¿½ï¿½ï¿½ë±¾ï¿½ï¿½1ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ²ï¿½Ñ¯ï¿½ï¿½Öª
 	if (isLeapYear() && month > 2)
 	{
-		totalDays++;   //ÈòÄê£¬²¢ÇÒ´óÓÚ2ÔÂÊ±£¬×ÜÌìÊı+1
+		totalDays++;   //ï¿½ï¿½ï¿½ê£¬ï¿½ï¿½ï¿½Ò´ï¿½ï¿½ï¿½2ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½+1
 	}
 }
-//µÃµ½µ±Ç°ÔÂµÄÌìÊıµÄgetMaxDayº¯Êı
+//ï¿½Ãµï¿½ï¿½ï¿½Ç°ï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½getMaxDayï¿½ï¿½ï¿½ï¿½
 int Date::getMaxDay() const
 {
-	//ÅĞ¶ÏmonthÊÇ¶àÉÙ£¬È»ºóÔÚDAYS_BEFORE_MONTHÊı×éÖĞÕÒµ½¶ÔÓ¦ÈÕÆÚ
+	//ï¿½Ğ¶ï¿½monthï¿½Ç¶ï¿½ï¿½Ù£ï¿½È»ï¿½ï¿½ï¿½ï¿½DAYS_BEFORE_MONTHï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½
 	if (isLeapYear() && month == 2)
 	{
 		return 29;
@@ -39,14 +45,14 @@ int Date::getMaxDay() const
 	}
 }
 
-//ÓÃÀ´½«µ±Ç°ÈÕÆÚÊä³öµÄshowº¯Êı
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½showï¿½ï¿½ï¿½ï¿½
 void Date::show() const
 {
 	cout << getYear() << "-" << getMonth() << "-" << getDay();
 
 	//cout<<year <<"-"<<month<<"-"<<day <<endl;
 }
-//ÓÃÀ´ÅĞ¶Ïµ±Ç°ÈÕÆÚÓëÖ¸¶¨ÈÕÆÚÏà²îÌìÊıµÄdistanceº¯Êı
+//ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¶Ïµï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½distanceï¿½ï¿½ï¿½ï¿½
 
 
 Date::~Date()

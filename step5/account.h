@@ -5,8 +5,11 @@
 #include<string>
 #include<map>
 #include<iostream>
-using namespace std;
+using namespace std; 
 class AccountRecord;
+
+
+
 typedef multimap<Date, AccountRecord>RecordMap;
 class Account
 {
@@ -15,7 +18,7 @@ private:
 	std::string Id;
 	double static total;
 public:
-	std::string getId() { return Id; }
+	std::string getId() const { return Id; }
 	double  getBalance()const { return balance; }
 	double static getTotal() { return total; }
 	virtual void  deposit(const Date& date, double amount, const std::string& c)=0;
@@ -84,4 +87,6 @@ public:
 		std::cout << "\t#" << account->getId() << "\t" << amount << "\t" << balance << "\t" << c << std::endl;
 	}
 };
+
+
 #endif // ACCOUNT_H_INCLUDED

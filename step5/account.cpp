@@ -3,9 +3,11 @@
 #include<math.h>
 #include "account.h"
 #include"Accumulator.h"
+#include"AccountException.h"
 #include<iomanip>
 #include<vector>
 #include<map>
+
 using namespace std;
 double Account::total = 0;
 RecordMap Account::recordMap;
@@ -45,13 +47,13 @@ void SavingsAccount::deposit(const Date& date, double am, const string& c)
 	record(date, am, c);
 	acc.change(date, getBalance());
 }
-void SavingsAccount::withdraw(const Date& date, double am, const string& c)
-{
-	if (am <= getBalance())
-	{
-		record(date, -am, c);
-		acc.change(date, getBalance());
-	}
+void SavingsAccount::withdraw(const Date& date, double am, const string& c) {
+    if (am <= getBalance()) {
+        record(date, -am, c);
+        acc.change(date, getBalance());
+    } else {
+        throw AccountException("Insufficient funds in account.", this);
+    }
 }
 void SavingsAccount:: settle(const Date& date)
 {
@@ -70,13 +72,13 @@ void CreditAccount::deposit(const Date& date, double am, const string& c)
 	record(date, am, c);
 	acc.change(date, getDebt());
 }
-void CreditAccount::withdraw(const Date& date, double am, const string& c)
-{
-	if (am -getBalance()<=credit)
-	{
-		record(date, -am, c);
-		acc.change(date, getDebt());
-	}
+void CreditAccount::withdraw(const Date& date, double am, const string& c) {
+    if (am - getBalance() <= credit) {
+        record(date, -am, c);
+        acc.change(date, getDebt());
+    } else {
+        throw AccountException("Credit limit exceeded.", this);
+    }
 }
 void CreditAccount::settle(const Date& date)
 {
