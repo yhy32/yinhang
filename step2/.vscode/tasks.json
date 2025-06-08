@@ -1,0 +1,24 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build cpp",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-std=c++11",
+                "-Wall",
+                "step2.cpp",
+                "account.cpp",
+                "date.cpp",
+                "-o",
+                "step2"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"]
+        }
+    ]
+}
